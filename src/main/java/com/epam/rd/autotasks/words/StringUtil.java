@@ -4,7 +4,25 @@ import java.util.Arrays;
 
 public class StringUtil {
     public static int countEqualIgnoreCaseAndSpaces(String[] words, String sample) {
-        throw new UnsupportedOperationException();
+
+
+        if(words == null || sample == null || sample == "") return  0;
+        int countEqualsWord = 0;
+
+        //для кожного слова з words
+        for(int i = 0; i < words.length; i ++) {
+
+
+
+            if(words[i].replaceAll("\\s*", "")
+                    .compareToIgnoreCase(
+                            sample.replaceAll("\\s*", "")
+                    )
+               == 0) countEqualsWord++;
+           // System.out.println(words[i].replaceAll("\\s*", "").toString());
+        }
+        System.out.println(sample);
+        return countEqualsWord;
     }
 
     public static String[] splitWords(String text) {
