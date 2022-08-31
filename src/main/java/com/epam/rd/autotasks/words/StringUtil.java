@@ -35,8 +35,12 @@ public class StringUtil {
         for(String e : temp) if(e != "") result.add(e);
         if(result.length() == 0) return null;
 
-       // printString(p1.split(result.toString()));
-        return p1.split(result.toString());
+        String[] resultString = p1.split(result.toString());
+
+        //System.out.println(resultString.length);
+        //printString(resultString);
+
+        return resultString;
     }
 
     public static String convertPath(String path, boolean toWin) {
