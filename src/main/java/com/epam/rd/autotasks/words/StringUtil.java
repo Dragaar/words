@@ -26,13 +26,14 @@ public class StringUtil {
     }
 
     public static String[] splitWords(String text) {
-        if(text == null || text == "") return null;
+        if(text == null || text.equals("")) return null;
 
         Pattern p1 = Pattern.compile("[ ,.;:?!]");
         String[] temp = p1.split(text);
 
         StringJoiner result = new StringJoiner(",");
-        for(String e : temp) if(e != "") result.add(e);
+        for(String e : temp) if(!e.equals("")) result.add(e);
+
         if(result.length() == 0) return null;
 
         String[] resultString = p1.split(result.toString());
