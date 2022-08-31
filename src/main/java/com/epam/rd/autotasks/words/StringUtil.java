@@ -43,26 +43,47 @@ public class StringUtil {
 
         String resultPath = null;
 
-        String checkWinPath = "";
-        String checkUnixPath = "~?[\\B\\]";
+        Pattern checkWinPath = Pattern.compile(
+                "(^([a-zA-Z]:)?" + //C:\ D:\ F:\
+                "(..)?" +                // ..\
+                "([a-zA-Z]*)?" +         // dir\
+                "\\\\" +
+                "(?:[^\\\\/:*?\"<>|\\r\\n]+\\\\)*" +
+                "[^\\\\/:*?\"<>|\\r\\n]*$)");
 
-        //Pattern regexToWin = Pattern.compile("(~?)([//])");
-        //Pattern regexToUnix = Pattern.compile("");
-        System.out.println(path);
+        // (^([a-zA-Z]:)?(..)?([a-zA-Z]*)?\\\\(?:[^\\\\/:*?\"<>|\\r\\n]+\\\\)*[^\\\\/:*?\"<>|\\r\\n]*$)");
+
+        Pattern checkUnixPath = Pattern.compile("^~?([^\\\\~]*)$");
+
+        // ^~?([^\\]*)$
+
+        Matcher unixMatcher = checkUnixPath.matcher(path);
+        Matcher winMatcher = checkWinPath.matcher(path);
+
         if(toWin)
        {
-           //Matcher m = regexToWin.matcher(path);
-           if(path.startsWith("~"))         resultPath = path.replaceFirst("\\~", "C:\\\\User").replaceAll("/", "\\\\");
-           else if (path.startsWith("/"))   resultPath = path.replaceFirst("/", "C:\\\\").replaceAll("/", "\\\\");
-           else resultPath = path.replaceAll("/", "\\\\");
 
+           if(unixMatcher.matches()) {
+               if (path.startsWith("~")) resultPath = path.replaceFirst("\\~", "C:\\\\User").replaceAll("/", "\\\\");
+               else if (path.startsWith("/")) resultPath = path.replaceFirst("/", "C:\\\\").replaceAll("/", "\\\\");
+               else resultPath = path.replaceAll("/", "\\\\");
+           } else if (winMatcher.matches()) {
+               resultPath = path;
+           }
        }
        else
        {
-           if(path.startsWith("C")) resultPath = path.replaceFirst("C\\:\\\\\\\\User", "~/").replaceAll("\\\\", "/");
-           else resultPath = path.replaceAll("\\\\", "/");
+
+           if(winMatcher.matches()) {
+
+               if (path.startsWith("C"))
+                   resultPath = path.replaceFirst("C:\\\\User", "~").replaceFirst("C:\\\\", "/").replaceAll("\\\\", "/");
+               else resultPath = path.replaceAll("\\\\", "/");
+           } else if (unixMatcher.matches()) {
+            resultPath = path;
+        }
        }
-        System.out.println(resultPath);
+        System.out.println("Input - " + path + " Result - " + resultPath);
        return resultPath;
     }
 
