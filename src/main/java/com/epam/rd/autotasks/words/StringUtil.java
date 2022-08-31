@@ -35,7 +35,7 @@ public class StringUtil {
         for(String e : temp) if(e != "") result.add(e);
         if(result.length() == 0) return null;
 
-        printString(p1.split(result.toString()));
+       // printString(p1.split(result.toString()));
         return p1.split(result.toString());
     }
 
