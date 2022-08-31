@@ -19,7 +19,7 @@ public class StringUtil {
                             sample.trim()
                     )
                == 0) countEqualsWord++;
-           System.out.println(words[i].trim().toString());
+           //System.out.println(words[i].trim().toString());
         }
         //System.out.println(sample);
         return countEqualsWord;
@@ -41,6 +41,8 @@ public class StringUtil {
 
     public static String convertPath(String path, boolean toWin) {
 
+        if(path == null || path == "") return null;
+
         String resultPath = null;
 
         Pattern checkWinPath = Pattern.compile(
@@ -55,13 +57,19 @@ public class StringUtil {
 
         Pattern checkUnixPath = Pattern.compile("^~?([^\\\\~]*)$");
 
+        Pattern checkSlashDuplication = Pattern.compile("(?=(/))\\1{2,}"); // найти . (любі) дублікати - (?=(.))\1{2,}
+
         // ^~?([^\\]*)$
 
         Matcher unixMatcher = checkUnixPath.matcher(path);
         Matcher winMatcher = checkWinPath.matcher(path);
 
+        Matcher SlashDuplicationMatcher = checkSlashDuplication.matcher(path);
+        if(SlashDuplicationMatcher.find()) return null; // перевірка чи не має дублікатів слешів у віндовс шляху
+
         if(toWin)
        {
+
 
            if(unixMatcher.matches()) {
                if (path.startsWith("~")) resultPath = path.replaceFirst("\\~", "C:\\\\User").replaceAll("/", "\\\\");
@@ -83,7 +91,7 @@ public class StringUtil {
             resultPath = path;
         }
        }
-        System.out.println("Input - " + path + " Result - " + resultPath);
+        //System.out.println("Input - " + path + " Result - " + resultPath);
        return resultPath;
     }
 
